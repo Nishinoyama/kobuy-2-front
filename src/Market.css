@@ -4,4 +4,20 @@
     justify-content: center;
     margin-left: 20vw;
     margin-right: 20vw;
+    flex-direction: column;
+}
+
+.Market-thead {
+    cursor: pointer;
+}
+
+.Market-purchase {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.Market-purchase-p {
+    margin: 0;
 }

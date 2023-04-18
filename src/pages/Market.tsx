@@ -1,34 +1,41 @@
 import React from "react";
-import {Grocery, GroceryProps} from "../Grocery";
+import {GroceryTableRow} from "../GroceryTableRow";
 import axios from "axios";
-import {Table} from "react-bootstrap";
+import {Button, Dropdown, Table} from "react-bootstrap";
 import "../Market.css"
 
-type GroceryType = {
+type Grocery = {
   id: number
   name: string
   price: number
   unit: number
   expiration_date: Date
-  intoGrocery(): GroceryProps
+}
+
+type Buyer = {
+  id: number
+  name: string
 }
 
 interface MarketState {
-  groceriesJsons: GroceryType[]
-  groceriesData: GroceryType[]
+  groceriesJson: Grocery[]
+  groceriesData: Grocery[]
+  buyersJson: Buyer[]
   sortedBy: string
   sortOrdIsInc: boolean,
+  selectedBuyer: Buyer | null,
+  selectedGrocery: Grocery | null,
 }
 
 interface MarketProps {
 }
 
 class OrderedGrocery {
-  public readonly grocery: GroceryType;
+  public readonly grocery: Grocery;
   private readonly sortedBy: string;
   private readonly reversed: boolean;
 
-  constructor(grocery: GroceryType, sortedBy: string | null, reversed: boolean) {
+  constructor(grocery: Grocery, sortedBy: string | null, reversed: boolean) {
     this.grocery = grocery
     this.sortedBy = sortedBy || "id"
     this.reversed = reversed
@@ -59,16 +66,20 @@ export default class Market extends React.Component<MarketProps, MarketState> {
   constructor(props: MarketProps) {
     super(props);
     this.state = {
-      groceriesJsons: [],
+      groceriesJson: [],
       groceriesData: [],
+      buyersJson: [],
       sortedBy: "",
       sortOrdIsInc: true,
+      selectedBuyer: null,
+      selectedGrocery: null,
     }
   }
 
 
   componentDidMount() {
     this.fetchGroceries()
+    this.fetchUsers()
   }
 
   fetchGroceries() {
@@ -79,8 +90,21 @@ export default class Market extends React.Component<MarketProps, MarketState> {
           return g;
         })
         this.setState({
-          groceriesJsons: structuredClone(groceries),
+          groceriesJson: structuredClone(groceries),
           groceriesData: structuredClone(groceries),
+        })
+      })
+      .catch(e => alert(e))
+  }
+
+  fetchUsers() {
+    axios.get('http://localhost:8080/v1/api/users/')
+      .then(res => {
+        let users = res.data.users.map((u: any) => {
+          return u;
+        })
+        this.setState({
+          buyersJson: users
         })
       })
       .catch(e => alert(e))
@@ -93,7 +117,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
         increaseOrd = false;
       } else {
         it.setState({
-          groceriesData: structuredClone(it.state.groceriesJsons),
+          groceriesData: structuredClone(it.state.groceriesJson),
           sortedBy: "",
           sortOrdIsInc: true,
         })
@@ -102,7 +126,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
     } else {
       increaseOrd = true
     }
-    let groceriesData = it.state.groceriesJsons
+    let groceriesData = it.state.groceriesJson
       .map(g => new OrderedGrocery(g, ord, !increaseOrd))
       .sort((a, b) => a.cmp(b))
       .map(g => g.grocery);
@@ -117,11 +141,50 @@ export default class Market extends React.Component<MarketProps, MarketState> {
     return this.state.sortedBy !== ord ? "" : this.state.sortOrdIsInc ? "↑" : "↓";
   }
 
+  selectGrocery(selectedGrocery: Grocery) {
+    this.setState({selectedGrocery})
+  }
+
+  selectBuyer(selectedBuyer: Buyer) {
+    this.setState({selectedBuyer})
+  }
+
+  purchase(it: this) {
+    let mes = "";
+    if (it.state.selectedBuyer === null) {
+      mes += "購入者が未選択です\n"
+    }
+    if (it.state.selectedGrocery === null) {
+      mes += "購入する商品が未選択です\n"
+    }
+    if (mes !== "") {
+      alert(mes)
+      return false
+    }
+    let buyer = it.state.selectedBuyer!;
+    let grocery = it.state.selectedGrocery!;
+    axios.post('http://localhost:8080/v1/api/purchase',
+      {
+        buyer_id: buyer.id,
+        grocery_id: grocery.id,
+        unit: 1,
+      },
+    )
+      .then(res => {
+        if (res.status / 100 >= 4) {
+          throw Error
+        }
+        alert("購入完了")
+      })
+      .catch(e => alert(e))
+      .finally(() => this.fetchGroceries())
+  }
+
   render() {
     return (
       <div className="Market-main">
-        <Table bordered hover striped>
-          <thead>
+        <Table bordered hover striped variant="light">
+          <thead className="Market-thead">
           <tr>
             <th onClick={() => this.sortGroceriesBy(this, "id")}>
               # {this.groceriesIsSortedIndicator("id")}
@@ -138,23 +201,57 @@ export default class Market extends React.Component<MarketProps, MarketState> {
             <th onClick={() => this.sortGroceriesBy(this, "expiration_date")}>
               賞味期限 {this.groceriesIsSortedIndicator("expiration_date")}
             </th>
+            <th>
+              選択
+            </th>
           </tr>
           </thead>
           <tbody>
           {this.state.groceriesData.map(g =>
             (
-              <Grocery
+              <GroceryTableRow
                 id={g.id}
                 name={g.name}
                 price={g.price}
                 unit={g.unit}
                 expirationDate={g.expiration_date}
                 key={g.id}
+                selectGrocery={() => this.selectGrocery(g)}
               />
             )
           )}
           </tbody>
         </Table>
+        <div className="Market-purchase">
+          <Dropdown>
+            <Dropdown.Toggle>
+              {
+                (() => {
+                  let buyer = this.state.selectedBuyer;
+                  return buyer !== null ? buyer.name : "購入者"
+                })()
+              }
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {this.state.buyersJson.map(b =>
+                <Dropdown.Item
+                  key={b.id}
+                  active={this.state.selectedBuyer?.id === b.id}
+                  onClick={() => this.selectBuyer(b)}
+                >
+                  {b.name}
+                </Dropdown.Item>
+              )}
+            </Dropdown.Menu>
+          </Dropdown>
+          が
+          <p className="Market-purchase-p">
+            {this.state.selectedGrocery?.name} を
+          </p>
+          <Button onClick={() => this.purchase(this)}>
+            購入する！
+          </Button>
+        </div>
       </div>
     )
       ;
