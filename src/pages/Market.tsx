@@ -191,7 +191,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
   render() {
     return (
       <div className="Market-main">
-        <Table bordered hover striped variant="light">
+        <Table hover striped variant="light">
           <thead className="Market-thead">
           <tr>
             <th onClick={() => this.sortGroceriesBy(this, "id")}>

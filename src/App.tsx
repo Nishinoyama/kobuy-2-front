@@ -5,6 +5,8 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./pages/Layout";
 import "bootstrap/dist/css/bootstrap.min.css"
+import {Provision} from "./pages/Provision";
+import {Ledger} from "./pages/Ledger";
 
 function App() {
   return (
@@ -14,9 +16,8 @@ function App() {
           <Route path="/" element={<Layout/>}>
             <Route index path="/" element={<Home/>}/>
             <Route path="/market" element={<Market/>}/>
-            <Route path="/users" element={
-              [...Array(100)].map((_, i) => <p key={i}>users</p> )
-            }/>
+            <Route path="/ledger" element={<Ledger/>}/>
+            <Route path="/provision" element={<Provision/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

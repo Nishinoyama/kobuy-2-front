@@ -6,8 +6,9 @@ export default function Home() {
   return (
     <div className="Home-main">
       <ul>
-        <li><Link to={`market`}>market</Link></li>
-        <li><Link to={`users`}>users</Link></li>
+        <li><Link to={`market`}>商店</Link></li>
+        <li><Link to={`provision`}>出品</Link></li>
+        <li><Link to={`ledger`}>台帳</Link></li>
       </ul>
     </div>
   );
