@@ -10,8 +10,12 @@ export interface GroceryProps {
 
 export function Grocery(props: GroceryProps) {
   return (
-    <div>
-      {props.name} , {props.price}円： {props.unit} 個：賞味期限 {props.expirationDate.toISOString().split('T')[0]}
-    </div>
+    <tr>
+      <td> {props.id} </td>
+      <td> {props.name} </td>
+      <td> {props.price} </td>
+      <td> {props.unit} </td>
+      <td> {props.expirationDate.toISOString().split('T')[0]} </td>
+    </tr>
   )
 }
