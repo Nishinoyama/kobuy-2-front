@@ -21,3 +21,8 @@
 .Market-purchase-p {
     margin: 0;
 }
+
+.Market-GroceryTableRow-selected {
+    outline-style: auto;
+    outline-width: 3px;
+}

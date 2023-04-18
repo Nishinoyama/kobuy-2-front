@@ -85,7 +85,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
   fetchGroceries() {
     axios.get('http://localhost:8080/v1/api/groceries/')
       .then(res => {
-        let groceries = res.data.groceries.map((g: any) => {
+        let groceries: Grocery[] = res.data.groceries.map((g: any) => {
           g.expiration_date = new Date(Date.parse(g.expiration_date));
           return g;
         })
@@ -158,11 +158,18 @@ export default class Market extends React.Component<MarketProps, MarketState> {
       mes += "購入する商品が未選択です\n"
     }
     if (mes !== "") {
-      alert(mes)
+      alert(mes.slice(0, -1))
       return false
     }
     let buyer = it.state.selectedBuyer!;
     let grocery = it.state.selectedGrocery!;
+    if (grocery.unit <= 0) {
+      mes += `商品[${grocery.name}]の在庫がありません\n`
+    }
+    if (mes !== "") {
+      alert(mes.slice(0, -1))
+      return false
+    }
     axios.post('http://localhost:8080/v1/api/purchase',
       {
         buyer_id: buyer.id,
@@ -174,10 +181,11 @@ export default class Market extends React.Component<MarketProps, MarketState> {
         if (res.status / 100 >= 4) {
           throw Error
         }
-        alert("購入完了")
+        alert(`[${buyer.name}]が[${grocery.name}]を購入完了`)
       })
       .catch(e => alert(e))
       .finally(() => this.fetchGroceries())
+    return true;
   }
 
   render() {
@@ -201,13 +209,12 @@ export default class Market extends React.Component<MarketProps, MarketState> {
             <th onClick={() => this.sortGroceriesBy(this, "expiration_date")}>
               賞味期限 {this.groceriesIsSortedIndicator("expiration_date")}
             </th>
-            <th>
-              選択
-            </th>
           </tr>
           </thead>
           <tbody>
-          {this.state.groceriesData.map(g =>
+          {this.state.groceriesData
+            .filter(g => g.unit > 0)
+            .map(g =>
             (
               <GroceryTableRow
                 id={g.id}
@@ -216,6 +223,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
                 unit={g.unit}
                 expirationDate={g.expiration_date}
                 key={g.id}
+                selected={g.id === this.state.selectedGrocery?.id}
                 selectGrocery={() => this.selectGrocery(g)}
               />
             )
@@ -245,10 +253,16 @@ export default class Market extends React.Component<MarketProps, MarketState> {
             </Dropdown.Menu>
           </Dropdown>
           が
-          <p className="Market-purchase-p">
-            {this.state.selectedGrocery?.name} を
-          </p>
-          <Button onClick={() => this.purchase(this)}>
+          <Button variant="secondary" disabled onClick={() => this.purchase(this)}>
+            {
+              (() => {
+                let grocery = this.state.selectedGrocery;
+                return grocery !== null ? grocery.name : "商品"
+              })()
+            }
+          </Button>
+          を
+          <Button variant="success" onClick={() => this.purchase(this)}>
             購入する！
           </Button>
         </div>
