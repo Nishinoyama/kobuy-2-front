@@ -4,7 +4,7 @@ import axios from "axios";
 import {Button, Dropdown, Table} from "react-bootstrap";
 import "../Market.css"
 
-type Grocery = {
+export type Grocery = {
   id: number
   name: string
   price: number
@@ -215,30 +215,19 @@ export default class Market extends React.Component<MarketProps, MarketState> {
           {this.state.groceriesData
             .filter(g => g.unit > 0)
             .map(g =>
-            (
               <GroceryTableRow
-                id={g.id}
-                name={g.name}
-                price={g.price}
-                unit={g.unit}
-                expirationDate={g.expiration_date}
+                grocery={g}
                 key={g.id}
                 selected={g.id === this.state.selectedGrocery?.id}
                 selectGrocery={() => this.selectGrocery(g)}
               />
-            )
-          )}
+            )}
           </tbody>
         </Table>
         <div className="Market-purchase">
           <Dropdown>
             <Dropdown.Toggle>
-              {
-                (() => {
-                  let buyer = this.state.selectedBuyer;
-                  return buyer !== null ? buyer.name : "購入者"
-                })()
-              }
+              {this.state.selectedBuyer?.name ?? "購入者"}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {this.state.buyersJson.map(b =>
@@ -254,12 +243,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
           </Dropdown>
           が
           <Button variant="secondary" disabled onClick={() => this.purchase(this)}>
-            {
-              (() => {
-                let grocery = this.state.selectedGrocery;
-                return grocery !== null ? grocery.name : "商品"
-              })()
-            }
+            {this.state.selectedGrocery?.name ?? "商品"}
           </Button>
           を
           <Button variant="success" onClick={() => this.purchase(this)}>

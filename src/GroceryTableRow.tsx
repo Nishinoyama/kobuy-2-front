@@ -1,22 +1,19 @@
 import React from "react";
 import {Badge} from "react-bootstrap";
 import "./Market.css"
+import {Grocery} from "./pages/Market";
 
-export interface GroceryProps {
-  id: number
-  name: string
-  price: number
-  unit: number
-  expirationDate: Date
+interface GroceryProps {
+  grocery: Grocery
   selected: boolean
 
   selectGrocery(): void
 }
 
 export function GroceryTableRow(props: GroceryProps) {
-  let expiration_date_string = props.expirationDate.toISOString().split('T')[0]
+  let expiration_date_string = props.grocery.expiration_date.toISOString().split('T')[0]
   const expiration_duration =
-    props.expirationDate.getTime() - Date.now();
+    props.grocery.expiration_date.getTime() - Date.now();
   const expiration_indicator =
     expiration_duration < 0 ? "exceeded" :
       expiration_duration < 1000 * 3600 * 24 * 7 ? "soon" : // 7 days
@@ -40,11 +37,12 @@ export function GroceryTableRow(props: GroceryProps) {
     <tr
       className={props.selected ? "Market-GroceryTableRow-selected" : ""}
       onClick={props.selectGrocery}
+      style={{cursor: "pointer"}}
     >
-      <td> {props.id} </td>
-      <td> {props.name} </td>
-      <td> {props.price} </td>
-      <td> {props.unit} </td>
+      <td> {props.grocery.id} </td>
+      <td> {props.grocery.name} </td>
+      <td> {props.grocery.price} </td>
+      <td> {props.grocery.unit} </td>
       <td>
         {expiration_date_string}
         {expiration_badge}

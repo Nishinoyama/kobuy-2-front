@@ -15,10 +15,11 @@
 }
 
 .App-main {
-    justify-content: center;
     padding-top: 5vh;
+    max-width: 40vw;
     background-color: #8cad8c;
     color: #113111;
+    margin: auto;
 }
 
 h1 {
