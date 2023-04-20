@@ -15,7 +15,7 @@ export function GroceryTableRow(props: GroceryProps) {
   const expiration_duration =
     props.grocery.expiration_date.getTime() - Date.now();
   const expiration_indicator =
-    expiration_duration < 0 ? "exceeded" :
+    expiration_duration < -1000 * 3600 * 24 ? "exceeded" : // 1 day
       expiration_duration < 1000 * 3600 * 24 * 7 ? "soon" : // 7 days
         expiration_duration < 1000 * 3600 * 24 * 365 * 100 ? "far" : "eternal" // CENTURY
   let expiration_badge = <></>

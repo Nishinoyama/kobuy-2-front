@@ -25,6 +25,7 @@ interface MarketState {
   sortOrdIsInc: boolean,
   selectedBuyer: Buyer | null,
   selectedGrocery: Grocery | null,
+  buyerSelectDisabled: boolean,
 }
 
 interface MarketProps {
@@ -73,6 +74,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
       sortOrdIsInc: true,
       selectedBuyer: null,
       selectedGrocery: null,
+      buyerSelectDisabled: false,
     }
   }
 
@@ -80,6 +82,17 @@ export default class Market extends React.Component<MarketProps, MarketState> {
   componentDidMount() {
     this.fetchGroceries()
     this.fetchUsers()
+    axios.get('http://localhost:8080/authed/', {withCredentials: true})
+      .then(res => {
+        console.log(res);
+        this.setState({
+          selectedBuyer: {
+            name: res.data.user_name,
+            id: res.data.user_id,
+          },
+          buyerSelectDisabled: true,
+        })
+      })
   }
 
   fetchGroceries() {
@@ -226,7 +239,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
         </Table>
         <div className="Market-purchase">
           <Dropdown>
-            <Dropdown.Toggle>
+            <Dropdown.Toggle disabled={this.state.buyerSelectDisabled}>
               {this.state.selectedBuyer?.name ?? "購入者"}
             </Dropdown.Toggle>
             <Dropdown.Menu>

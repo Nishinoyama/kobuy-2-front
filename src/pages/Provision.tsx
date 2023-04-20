@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import axios from "axios";
 
 interface ProvisionState {
+  user_id: number | null
   validated: boolean,
   expiration_date_disable: boolean
 }
@@ -12,6 +13,7 @@ export class Provision extends Component<{}, ProvisionState> {
   constructor(props: {}) {
     super(props);
     this.state = {
+      user_id: null,
       validated: false,
       expiration_date_disable: false,
     }
@@ -42,6 +44,9 @@ export class Provision extends Component<{}, ProvisionState> {
         unit,
         expiration_date,
       },
+      {
+        withCredentials: true
+      }
     ).then(res => {
       alert("出品完了" + JSON.stringify(res.data))
     }).catch(err => {
@@ -58,7 +63,25 @@ export class Provision extends Component<{}, ProvisionState> {
     })
   }
 
+  componentDidMount() {
+    axios.get('http://localhost:8080/authed/', {withCredentials: true})
+      .then(res => {
+        console.log(res);
+        this.setState({
+          user_id: res.data.user_id
+        })
+      })
+
+  }
+
   render() {
+    if (this.state.user_id === null) {
+      return (
+        <>
+          <h1>出品にはログインが必要</h1>
+        </>
+      )
+    }
     return (
       <>
         <h1>出品</h1>
