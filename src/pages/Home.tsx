@@ -10,6 +10,7 @@ export default function Home() {
         <li><Link to={`provision`}>出品</Link></li>
         <li><Link to={`ledger`}>台帳</Link></li>
         <li><Link to={`payment`}>支払い</Link></li>
+        <li><Link to={`users`}>メンバー</Link></li>
       </ul>
     </div>
   );

@@ -9,6 +9,7 @@ import {Provision} from "./pages/Provision";
 import {Ledger} from "./pages/Ledger";
 import axios from "axios";
 import {Payment} from "./pages/Payment";
+import {Users} from "./pages/Users";
 
 axios.defaults.baseURL = process.env.REACT_APP_KOBUY_BASE_URL
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/ledger" element={<Ledger/>}/>
             <Route path="/provision" element={<Provision/>}/>
             <Route path="/payment" element={<Payment/>}/>
+            <Route path="/users" element={<Users/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
