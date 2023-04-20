@@ -36,7 +36,7 @@ export class Provision extends Component<{}, ProvisionState> {
       expiration_date_raw = new Date(Date.parse("3000-01-01"))
     }
     const expiration_date = expiration_date_raw.toISOString();
-    axios.post('http://localhost:8080/v1/api/groceries/provide',
+    axios.post('/v1/api/groceries/provide',
       {
         provider_id,
         name,
@@ -64,7 +64,7 @@ export class Provision extends Component<{}, ProvisionState> {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:8080/authed/', {withCredentials: true})
+    axios.get('/authed/', {withCredentials: true})
       .then(res => {
         console.log(res);
         this.setState({

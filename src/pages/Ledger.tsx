@@ -33,7 +33,7 @@ export class Ledger extends Component<{}, LedgerState> {
   }
 
   fetchLedger() {
-    axios.get('http://localhost:8080/v1/api/ledger')
+    axios.get('/v1/api/ledger')
       .then(res => {
         console.log(res.data)
         let ledger: LedgerPage[] = res.data.ledgers.map((l: any): LedgerPage => {

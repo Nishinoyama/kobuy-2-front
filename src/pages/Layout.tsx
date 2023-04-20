@@ -28,7 +28,7 @@ export default class Layout extends React.Component<any, LoginStatus> {
   }
 
   updateLogin() {
-    axios.get('http://localhost:8080/authed/', {withCredentials: true})
+    axios.get('/authed/', {withCredentials: true})
       .then(res => {
         this.setState({
           logged_in: true,
@@ -56,7 +56,7 @@ export default class Layout extends React.Component<any, LoginStatus> {
   }
 
   logout() {
-    axios.get('http://localhost:8080/logout', {withCredentials: true})
+    axios.get('/logout', {withCredentials: true})
       .then(_ => {
         this.updateLogin()
       })
@@ -70,7 +70,7 @@ export default class Layout extends React.Component<any, LoginStatus> {
   }
 
   login(user_name: string, password: string) {
-    axios.post('http://localhost:8080/login', {user_name, password}, {withCredentials: true})
+    axios.post('/login', {user_name, password}, {withCredentials: true})
       .then(_ => {
         this.updateLogin()
       })

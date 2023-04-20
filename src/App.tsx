@@ -7,6 +7,9 @@ import Layout from "./pages/Layout";
 import "bootstrap/dist/css/bootstrap.min.css"
 import {Provision} from "./pages/Provision";
 import {Ledger} from "./pages/Ledger";
+import axios from "axios";
+
+axios.defaults.baseURL = process.env.REACT_APP_KOBUY_BASE_URL
 
 function App() {
   return (

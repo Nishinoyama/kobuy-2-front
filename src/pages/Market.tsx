@@ -82,7 +82,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
   componentDidMount() {
     this.fetchGroceries()
     this.fetchUsers()
-    axios.get('http://localhost:8080/authed/', {withCredentials: true})
+    axios.get('/authed/', {withCredentials: true})
       .then(res => {
         console.log(res);
         this.setState({
@@ -96,7 +96,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
   }
 
   fetchGroceries() {
-    axios.get('http://localhost:8080/v1/api/groceries/')
+    axios.get('/v1/api/groceries/')
       .then(res => {
         let groceries: Grocery[] = res.data.groceries.map((g: any) => {
           g.expiration_date = new Date(Date.parse(g.expiration_date));
@@ -111,7 +111,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
   }
 
   fetchUsers() {
-    axios.get('http://localhost:8080/v1/api/users/')
+    axios.get('/v1/api/users/')
       .then(res => {
         let users = res.data.users.map((u: any) => {
           return u;
@@ -183,7 +183,7 @@ export default class Market extends React.Component<MarketProps, MarketState> {
       alert(mes.slice(0, -1))
       return false
     }
-    axios.post('http://localhost:8080/v1/api/purchase',
+    axios.post('/v1/api/purchase',
       {
         buyer_id: buyer.id,
         grocery_id: grocery.id,
