@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import {Provision} from "./pages/Provision";
 import {Ledger} from "./pages/Ledger";
 import axios from "axios";
+import {Payment} from "./pages/Payment";
 
 axios.defaults.baseURL = process.env.REACT_APP_KOBUY_BASE_URL
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/market" element={<Market/>}/>
             <Route path="/ledger" element={<Ledger/>}/>
             <Route path="/provision" element={<Provision/>}/>
+            <Route path="/payment" element={<Payment/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
