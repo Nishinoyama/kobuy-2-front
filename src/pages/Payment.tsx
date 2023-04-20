@@ -59,7 +59,6 @@ export class Payment extends Component<{}, PaymentState> {
     this.fetchUsers()
     axios.get('/authed/', {withCredentials: true})
       .then(res => {
-        console.log(res);
         this.setState({
           user_id: res.data.user_id
         })

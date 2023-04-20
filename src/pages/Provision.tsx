@@ -27,7 +27,7 @@ export class Provision extends Component<{}, ProvisionState> {
       e.stopPropagation();
       return false;
     }
-    const provider_id = 1; // todo!
+    const provider_id = this.state.user_id!;
     const name: string = form.name.value;
     const price: number = Number.parseInt(form.price.value);
     const unit: number = Number.parseInt(form.price.value);
