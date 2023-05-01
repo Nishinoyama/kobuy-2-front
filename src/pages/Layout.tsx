@@ -66,7 +66,7 @@ export default class Layout extends React.Component<any, LoginStatus> {
   }
 
   loginSubmit(e: any) {
-    this.login(e.target.name.value, e.target.password.value)
+    this.login(e.target.login_name.value, e.target.login_password.value)
   }
 
   login(user_name: string, password: string) {
@@ -89,7 +89,7 @@ export default class Layout extends React.Component<any, LoginStatus> {
           <Form style={{display: "block"}} onSubmit={(e) => this.loginSubmit(e)}>
             <Row>
               <Col md={4}>
-                <Form.Group controlId="name">
+                <Form.Group controlId="login_name">
                   <Form.Control
                     type="text"
                     placeholder="name"
@@ -99,7 +99,7 @@ export default class Layout extends React.Component<any, LoginStatus> {
                 </Form.Group>
               </Col>
               <Col md={4}>
-                <Form.Group controlId="password">
+                <Form.Group controlId="login_password">
                   <Form.Control
                     type="password"
                     placeholder="password"
