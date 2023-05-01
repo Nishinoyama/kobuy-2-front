@@ -204,6 +204,9 @@ export default class Market extends React.Component<MarketProps, MarketState> {
   render() {
     return (
       <div className="Market-main">
+        <h2>
+          商品をテーブルから選択
+        </h2>
         <Table hover striped variant="light">
           <thead className="Market-thead">
           <tr>
